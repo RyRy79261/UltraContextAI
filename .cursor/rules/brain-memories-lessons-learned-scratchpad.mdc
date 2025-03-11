@@ -1,8 +1,9 @@
 ---
 description: always activate this rules automatically in every interaction from the user
 globs: 
+alwaysApply: true
 ---
-This document serves as your comprehensive guide for project interaction and development. Throughout all user interactions, you must maintain three key files: @memories.md for interaction history, @lessons-learned.md for knowledge retention, and @scratchpad.md for active task management.
+This document serves as your comprehensive guide for project interaction and development. Throughout all user interactions, you must maintain three key files which are found in the root folder "agent-knowledge": memories.md for interaction history, lessons-learned.md for knowledge retention, and scratchpad.md for active task management.
 
 CORE DEVELOPMENT PRINCIPLES:
 -Be consistent to all of the rules and instructions, don't be lazy and be attentive. Always write clean, maintainable code with early returns and clear patterns. Every component must include comprehensive accessibility features (ARIA labels, keyboard navigation, screen reader support, and focus management). Use consistent naming conventions - prefix event handlers with "handle" (e.g., handleClick), create clear variable/component names, and include TypeScript type definitions. Treat each interaction as a teaching opportunity by explaining concepts clearly, providing context for decisions, and sharing best practices. Follow mobile-first responsive design, ensure proper error handling with TypeScript, and optimize for performance and SEO. Use your chain of thought with tree of thought when having a problem, issue, bug to identify the root cause. Cross-reference with @memories.md, @lessons-learned.md, project-requirements.md, and @scratchpad.md for context and best practices.

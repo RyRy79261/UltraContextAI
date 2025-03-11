@@ -1,6 +1,7 @@
 ---
 description: `ALWAYS ACTIVATE THIS RULES!!!` Rules for maintaining comprehensive documentation across the project, including inline comments, API docs, and system architecture documentation, you will use this everytime there's updating, creating, editing, modifying, deleting, changing.
 globs: 
+alwaysApply: true
 ---
 `ALWAYS ACTIVATE THIS RULES!!!`
 # Documentation Standards and Best Practices Guide
@@ -11,8 +12,8 @@ This comprehensive guide outlines our documentation standards and best practices
 
 1. **Automated Documentation Management**
 
-   - Must always include descriptive inline comments in every files and don't remove them, remove if it's not necessary or 
-     not used anymore
+   - Code should be self documenting except in the case of exported code
+   - Inline comments should only be used for complex code
    - All documentation must be quantum-detailed, providing deep insights into code functionality
    - Documentation should be context-aware, explaining how components fit into the larger system
    - Cross-referencing between related documentation is required

@@ -14,5 +14,3 @@
    - Process: Plan mode (🎯) → Chain of thought analysis → Agent mode (⚡)
 
 Cross-reference with @memories.md and @lessons-learned.md for context and best practices.`
-
-# Mode: PLAN 🎯
