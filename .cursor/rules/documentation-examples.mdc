@@ -1,0 +1,222 @@
+---
+description: Example of documentation styles 
+globs: 
+alwaysApply: true
+---
+# Documentation Example
+
+This file provides examples of proper documentation style according to our minimalist documentation standards.
+
+## Good Example - Authentication Provider
+
+```typescript
+"use client";
+
+import { ReactNode, useEffect, useState } from "react";
+import { AuthProvider as AuthProviderBase } from "@auth-library/react";
+import { createConfig, DataProvider } from "@data-library/core";
+import { createClient } from "@client-library/client";
+import { AlertIcon } from "@ui-library/icons";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { networkConfig } from "@/lib/network-config";
+
+const queryClient = new QueryClient();
+
+const clientConfig = createConfig({
+  networks: [networkConfig],
+  connections: {
+    [networkConfig.id]: createClient(),
+  },
+});
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+/**
+ * AuthProvider wraps the application with authentication and data providers.
+ * It handles environment configuration and error states.
+ * 
+ * @param children - The child components to be rendered inside the providers.
+ * @returns The wrapped component tree with authentication context.
+ */
+export function AuthProvider({ children }: AuthProviderProps) {
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  
+  const apiKey = process.env.NEXT_PUBLIC_API_KEY as string;
+
+  useEffect(() => {
+    setLoading(true);
+    
+    if (!apiKey) {
+      setError("Missing NEXT_PUBLIC_API_KEY environment variable. Please set it in your .env.local file.");
+      console.error("Missing NEXT_PUBLIC_API_KEY environment variable. Please set it in your .env.local file.");
+    } else {
+      setError(null);
+    }
+    
+    setLoading(false);
+  }, [apiKey]);
+
+  if (loading) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background/80">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="fixed inset-0 flex items-center justify-center bg-background/95">
+        <div className="bg-card p-6 rounded-lg shadow-lg max-w-md text-center space-y-4">
+          <AlertIcon className="h-12 w-12 text-destructive mx-auto" />
+          <h2 className="text-xl font-semibold">Configuration Error</h2>
+          <p className="text-muted-foreground">{error}</p>
+          <p className="text-sm">
+            Please check your environment variables and restart the application.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <AuthProviderBase
+      apiKey={apiKey}
+      config={{
+        authMethods: ["oauth", "email", "social"],
+        appearance: {
+          theme: "light",
+          accentColor: "#4F46E5", // Indigo-600
+          logo: "/brand-logo.svg",
+        },
+        securityOptions: {
+          createOnLogin: "users-without-accounts",
+        },
+      }}
+    >
+      <QueryClientProvider client={queryClient}>
+        <DataProvider config={clientConfig}>
+          {children}
+        </DataProvider>
+      </QueryClientProvider>
+    </AuthProviderBase>
+  );
+}
+```
+
+## Key Documentation Principles Demonstrated
+
+1. **One Main JSDoc Comment**:
+   - The file has one JSDoc comment for the main exported function `AuthProvider`
+   - The comment explains what the component does at a high level
+   - It documents parameters and return value
+
+2. **Self-Documenting Code**:
+   - Clear variable names like `loading`, `error`, `apiKey`
+   - Descriptive function name `AuthProvider`
+   - Logical code structure that's easy to follow
+
+3. **Minimal Comments**:
+   - No redundant comments explaining obvious code
+   - Only necessary comment on non-human-readable element (hex color code)
+
+4. **What's Not Documented**:
+   - Implementation details that are clear from the code
+   - Self-evident conditionals
+   - Internal state management
+   - UI rendering details
+
+## Bad Example (Over-Documentation)
+
+```typescript
+// This is a bad example of over-documentation
+
+/**
+ * This function formats a user's full name
+ * It takes firstName and lastName parameters which are both strings
+ * It concatenates them together with a space in between
+ * It returns the full name as a string
+ * This is used throughout the application whenever we need to display a user's full name
+ * 
+ * @param firstName - The user's first name
+ * @param lastName - The user's last name
+ * @returns The user's full name
+ */
+export function formatFullName(firstName: string, lastName: string): string {
+  // Create a variable to store the formatted name
+  const fullName = `${firstName} ${lastName}`;
+  
+  // Return the formatted name
+  return fullName;
+}
+```
+
+## Why It's Bad
+
+1. **Redundant Information**:
+   - The comment and JSDoc repeat what's obvious from the function name and types
+   - "This function formats a user's full name" adds no value beyond what the name `formatFullName` already tells us
+   - "It takes firstName and lastName parameters which are both strings" repeats the type information
+   
+2. **Inline Comments State the Obvious**:
+   - "Create a variable to store the formatted name" - obvious from the code
+   - "Return the formatted name" - obvious from the code
+   
+3. **Better Version**:
+
+```typescript
+/**
+ * @param firstName - User's first name
+ * @param lastName - User's last name
+ * @returns Formatted full name
+ */
+export function formatFullName(firstName: string, lastName: string): string {
+  return `${firstName} ${lastName}`;
+}
+```
+
+Or for something this simple, possibly no comment at all, as it is entirely self-documenting.
+
+## Good Example - Data Fetching Hook
+
+```typescript
+/**
+ * Hook for fetching paginated user data with sorting and filtering capabilities.
+ * Handles loading, error states, and cache invalidation.
+ * 
+ * @param options - Configuration options for the data query
+ * @returns User data along with pagination state and fetch utilities
+ */
+export function useUsers(options: UserQueryOptions) {
+  const { filter, sort, page, pageSize } = options;
+  const [isPending, startTransition] = useTransition();
+  
+  const queryKey = ['users', filter, sort, page, pageSize];
+  
+  return useQuery({
+    queryKey,
+    queryFn: async () => {
+      const params = new URLSearchParams({
+        page: page.toString(),
+        pageSize: pageSize.toString(),
+        sort: sort.field,
+        order: sort.direction,
+        ...filter
+      });
+      
+      const response = await fetch(`/api/users?${params.toString()}`);
+      
+      if (!response.ok) {
+        // Extract error information for better debugging
+        const error = await response.json();
+        throw new Error(error.message || 'Failed to fetch users');
+      }
+      
+      return response.json();
+    },
+    staleTime: 5 * 60 * 1000, // 5 minutes
+  });
+} 

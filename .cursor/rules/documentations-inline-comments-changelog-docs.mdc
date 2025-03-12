@@ -4,104 +4,88 @@ globs:
 alwaysApply: true
 ---
 `ALWAYS ACTIVATE THIS RULES!!!`
-# Documentation Standards and Best Practices Guide
+# Minimalist Documentation Standards
 
-This comprehensive guide outlines our documentation standards and best practices for maintaining high-quality documentation across the project. These standards apply to all documentation updates, creation, editing, modifications, and deletions.
+This guide outlines our documentation standards for maintaining high-quality, minimalist documentation across the project. These standards apply to all code creation, updates, and modifications.
 
 ## Core Documentation Principles
 
-1. **Automated Documentation Management**
-
-   - Code should be self documenting except in the case of exported code
-   - Inline comments should only be used for complex code
-   - All documentation must be quantum-detailed, providing deep insights into code functionality
-   - Documentation should be context-aware, explaining how components fit into the larger system
-   - Cross-referencing between related documentation is required
-   - Real-time updates must be maintained as code changes
-   - Documentation maintenance should be automated where possible
+1. **Self-Documenting Code First**
+   - Code should be primarily self-documenting through descriptive naming and clear structure
+   - Inline comments should only be used for complex or non-obvious code
+   - Documentation should focus on "why" rather than "what"
+   - Documentation maintenance should be simplified and focused on exported APIs
 
 2. **Documentation Categories**
 
    A. **Inline Code Documentation**
-   Every code block must include:
-   - Quantum documentation maintained by AI
-   - Feature context explaining the component's role
-   - Dependency listings that auto-update
-   - Usage examples that stay current
-   - Performance considerations
-   - Security implications
-   - Changelog entries
+   Follow these principles:
+   - One high-level comment per file for the main component/class/function
+   - JSDoc for all exported functions, classes, and types
+   - Comments only for non-human-readable elements (hex codes, assembly, regex)
+   - Explanations for workarounds, browser quirks, or performance considerations
 
    B. **Feature Documentation**
-   Each feature requires:
-   - AI-generated feature overview
-   - Detailed implementation explanations
-   - Comprehensive dependency mapping
-   - Current usage examples
-   - Performance metrics tracking
-   - Security consideration notes
-   - Change history tracking
+   Each feature should have:
+   - Concise feature overview in dedicated documentation files
+   - API documentation focused on usage, not implementation
+   - Examples that demonstrate typical use cases
 
    C. **API Documentation**
-   All APIs must document:
-   - Route context and purpose
-   - Request/response schemas
-   - Live examples
-   - Performance metrics
-   - Security measures
-   - Real-time updates
+   Focus on:
+   - JSDoc comments that feed into intellisense
+   - Parameter and return type documentation
+   - Important edge cases or limitations
 
 3. **Project Documentation Structure**
 
    Root Level Documentation:
    - README.md: Main project overview
    - ARCHITECTURE.md: System design documentation
-   - CHANGELOG.md: Automatically updated changes with versioning
+   - CHANGELOG.md: Major changes with versioning
 
-5. **Quality Standards**
+4. **Format Guidelines**
 
-   Completeness:
-   - Full coverage of all features
-   - Comprehensive depth
-   - Clear context
-   - Practical examples
+   JSDoc Format for Exported Entities:
+   ```typescript
+   /**
+    * Brief description of purpose/context
+    * 
+    * @param paramName - Description of parameter
+    * @returns Description of return value
+    */
+   export function exportedFunction() {}
+   ```
 
-   Accuracy:
-   - Technical verification
-   - Real-time updates
-   - Consistency maintenance
-   - High relevance
+   Inline Comments for Non-Human Readable Code:
+   ```typescript
+   // #6366F1 - Indigo-500 from Tailwind palette
+   const accentColor = "#6366F1";
+   ```
 
-   Accessibility:
-   - Clear readability
-   - Logical structure
-   - Intuitive navigation
-   - Efficient searchability
+   Explaining Complex Logic:
+   ```typescript
+   // Using bitwise operation for performance (vs Math.floor)
+   const fastFloor = value | 0;
+   ```
 
-6. **Update Protocol**
+5. **What NOT to Comment**
+
+   - Self-evident code that is already clear from variable/function names
+   - Function/variable definitions with descriptive names
+   - Comments that repeat what is already in the type definition
+   - Implementation details that are subject to change
+
+6. **When to Update Documentation**
 
    Documentation updates are triggered by:
-   - Code changes
-   - Feature additions
-   - API updates
-   - Security patches
-   - Performance changes
-
-   Required Actions:
-   - Update inline documentation
-   - Regenerate README files
-   - Refresh architecture diagrams
-   - Sync code examples
-   - Validate documentation
-
-   Verification Steps:
-   - Check completeness
-   - Verify accuracy
-   - Ensure freshness
-   - Maintain consistency
+   - Adding new exported functions/components
+   - Changing the purpose or API of an existing function
+   - Adding complex logic that isn't immediately obvious
+   - Implementing workarounds for bugs or edge cases
 
 ## Important Notes:
-- Existing inline comments must never be removed
-- The @docs/ and @.cursor/ directory serves as the source of truth
-- Each subdirectory in @/docs must maintain its own specific documentation
-- All documentation changes must follow these standards without exception
+- Existing useful comments should be preserved
+- Focus on quality over quantity
+- Documentation should be maintained as code changes
+- Each API should have appropriate JSDoc comments 
